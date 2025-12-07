@@ -133,10 +133,13 @@ const AuthManager = {
     },
 
     logout: () => {
+        console.log('Logging out user:', AuthManager.currentUser);
         AuthManager.currentUser = null;
-        Storage.setItem('currentSession', null);
+        localStorage.removeItem('currentSession');
+        localStorage.setItem('adminMode', 'false');
         AuthManager.updateUI();
         AdminManager.updateUI();
+        console.log('Logout complete');
     },
 
     isAuthenticated: () => {
@@ -253,34 +256,40 @@ const AuthManager = {
             }
             
             // Attach logout button handlers (both direct button and dropdown)
-            const directLogoutBtn = document.getElementById('logoutBtn');
-            if (directLogoutBtn) {
-                // Clone to remove old listeners
-                const newDirectLogoutBtn = directLogoutBtn.cloneNode(true);
-                directLogoutBtn.parentNode.replaceChild(newDirectLogoutBtn, directLogoutBtn);
+            setTimeout(() => {
+                const directLogoutBtn = document.getElementById('logoutBtn');
+                if (directLogoutBtn) {
+                    console.log('Attaching logout handler to direct button');
+                    // Clone to remove old listeners
+                    const newDirectLogoutBtn = directLogoutBtn.cloneNode(true);
+                    directLogoutBtn.parentNode.replaceChild(newDirectLogoutBtn, directLogoutBtn);
+                    
+                    newDirectLogoutBtn.addEventListener('click', (e) => {
+                        console.log('Logout button clicked!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        AuthManager.logout();
+                        showNotification('Logged out successfully', 'info');
+                    });
+                }
                 
-                newDirectLogoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    AuthManager.logout();
-                    showNotification('Logged out successfully', 'info');
-                });
-            }
-            
-            // Attach dropdown logout button handler
-            const dropdownLogoutBtn = document.getElementById('logoutBtnDropdown');
-            if (dropdownLogoutBtn) {
-                // Clone to remove old listeners
-                const newDropdownLogoutBtn = dropdownLogoutBtn.cloneNode(true);
-                dropdownLogoutBtn.parentNode.replaceChild(newDropdownLogoutBtn, dropdownLogoutBtn);
-                
-                newDropdownLogoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    AuthManager.logout();
-                    showNotification('Logged out successfully', 'info');
-                });
-            }
+                // Attach dropdown logout button handler
+                const dropdownLogoutBtn = document.getElementById('logoutBtnDropdown');
+                if (dropdownLogoutBtn) {
+                    console.log('Attaching logout handler to dropdown button');
+                    // Clone to remove old listeners
+                    const newDropdownLogoutBtn = dropdownLogoutBtn.cloneNode(true);
+                    dropdownLogoutBtn.parentNode.replaceChild(newDropdownLogoutBtn, dropdownLogoutBtn);
+                    
+                    newDropdownLogoutBtn.addEventListener('click', (e) => {
+                        console.log('Dropdown logout button clicked!');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        AuthManager.logout();
+                        showNotification('Logged out successfully', 'info');
+                    });
+                }
+            }, 100);
             
         } else {
             // Show login button, hide logout button
