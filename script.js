@@ -206,6 +206,12 @@ const AuthManager = {
                 </button>
             `;
             
+            // Show logout button directly
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.style.display = 'block';
+            }
+            
             // Show admin button if user is admin or owner
             if (AuthManager.hasRole('admin') || AuthManager.hasRole('owner')) {
                 adminButtonContainer.style.display = 'block';
@@ -246,14 +252,29 @@ const AuthManager = {
                 });
             }
             
-            // Attach logout button handler
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                // Remove existing listeners by cloning and replacing
-                const newLogoutBtn = logoutBtn.cloneNode(true);
-                logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+            // Attach logout button handlers (both direct button and dropdown)
+            const directLogoutBtn = document.getElementById('logoutBtn');
+            if (directLogoutBtn) {
+                // Clone to remove old listeners
+                const newDirectLogoutBtn = directLogoutBtn.cloneNode(true);
+                directLogoutBtn.parentNode.replaceChild(newDirectLogoutBtn, directLogoutBtn);
                 
-                newLogoutBtn.addEventListener('click', (e) => {
+                newDirectLogoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    AuthManager.logout();
+                    showNotification('Logged out successfully', 'info');
+                });
+            }
+            
+            // Attach dropdown logout button handler
+            const dropdownLogoutBtn = document.getElementById('logoutBtnDropdown');
+            if (dropdownLogoutBtn) {
+                // Clone to remove old listeners
+                const newDropdownLogoutBtn = dropdownLogoutBtn.cloneNode(true);
+                dropdownLogoutBtn.parentNode.replaceChild(newDropdownLogoutBtn, dropdownLogoutBtn);
+                
+                newDropdownLogoutBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     AuthManager.logout();
@@ -262,10 +283,14 @@ const AuthManager = {
             }
             
         } else {
-            // Show login button
+            // Show login button, hide logout button
             authButtons.innerHTML = `
                 <button id="loginBtn" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
             `;
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.style.display = 'none';
+            }
             adminButtonContainer.style.display = 'none';
             if (userProfileDropdown) {
                 userProfileDropdown.style.display = 'none';
@@ -1042,11 +1067,85 @@ const initForms = () => {
         });
     });
 
-    // Logout Handler
-    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+    // Forgot Password Handler
+    document.getElementById('forgotPasswordLink')?.addEventListener('click', (e) => {
         e.preventDefault();
-        AuthManager.logout();
-        showNotification('Logged out successfully', 'info');
+        ModalManager.close('loginModal');
+        ModalManager.open('forgotPasswordModal');
+    });
+
+    document.getElementById('forgotPasswordForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('forgotPasswordInput').value;
+        const users = Storage.get('users');
+        const user = users.find(u => u.email === input || u.mobile === input);
+        const resultDiv = document.getElementById('forgotPasswordResult');
+        
+        if (user) {
+            // In production, send password reset email/SMS
+            // For demo, show the password (in production, send reset link)
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#d1fae5';
+            resultDiv.style.color = '#065f46';
+            resultDiv.innerHTML = `
+                <strong>Password Reset Instructions Sent!</strong><br>
+                <small>Demo Mode: Your password is "${user.password}"<br>
+                In production, a password reset link would be sent to ${user.email || user.mobile}</small>
+            `;
+            document.getElementById('forgotPasswordForm').reset();
+        } else {
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#fee2e2';
+            resultDiv.style.color = '#991b1b';
+            resultDiv.innerHTML = '<strong>Error:</strong> No account found with that email or mobile number.';
+        }
+    });
+
+    // Forgot Username Handler
+    document.getElementById('forgotUsernameLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        ModalManager.close('loginModal');
+        ModalManager.open('forgotUsernameModal');
+    });
+
+    document.getElementById('forgotUsernameForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const mobile = document.getElementById('forgotUsernameMobile').value;
+        const users = Storage.get('users');
+        const user = users.find(u => u.mobile === mobile);
+        const resultDiv = document.getElementById('forgotUsernameResult');
+        
+        if (user) {
+            // In production, send username/email via SMS
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#d1fae5';
+            resultDiv.style.color = '#065f46';
+            resultDiv.innerHTML = `
+                <strong>Username Recovery Successful!</strong><br>
+                <small>Your email/username: <strong>${user.email || 'Not set'}</strong><br>
+                Mobile: <strong>${user.mobile}</strong><br>
+                In production, this information would be sent via SMS.</small>
+            `;
+            document.getElementById('forgotUsernameForm').reset();
+        } else {
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#fee2e2';
+            resultDiv.style.color = '#991b1b';
+            resultDiv.innerHTML = '<strong>Error:</strong> No account found with that mobile number.';
+        }
+    });
+
+    // Back to Login handlers
+    document.getElementById('backToLoginFromForgot')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        ModalManager.close('forgotPasswordModal');
+        ModalManager.open('loginModal');
+    });
+
+    document.getElementById('backToLoginFromUsername')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        ModalManager.close('forgotUsernameModal');
+        ModalManager.open('loginModal');
     });
 
     // Owner Management Handlers
