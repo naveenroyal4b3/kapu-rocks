@@ -1108,6 +1108,12 @@ const initForms = () => {
         ModalManager.open('forgotUsernameModal');
     });
 
+    document.getElementById('forgotUsernameLinkMobile')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        ModalManager.close('loginModal');
+        ModalManager.open('forgotUsernameModal');
+    });
+
     document.getElementById('forgotUsernameForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const mobile = document.getElementById('forgotUsernameMobile').value;
