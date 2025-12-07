@@ -1041,6 +1041,9 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    z-index: 100;
+    pointer-events: auto;
 }
 
 .btn-logout:hover {

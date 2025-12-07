@@ -255,39 +255,37 @@ const AuthManager = {
                 });
             }
             
-            // Attach logout button handlers (both direct button and dropdown)
+            // Attach logout button handlers using direct assignment (no cloning issues)
             setTimeout(() => {
                 const directLogoutBtn = document.getElementById('logoutBtn');
                 if (directLogoutBtn) {
-                    console.log('Attaching logout handler to direct button');
-                    // Clone to remove old listeners
-                    const newDirectLogoutBtn = directLogoutBtn.cloneNode(true);
-                    directLogoutBtn.parentNode.replaceChild(newDirectLogoutBtn, directLogoutBtn);
-                    
-                    newDirectLogoutBtn.addEventListener('click', (e) => {
+                    console.log('Found logout button, attaching handler');
+                    // Remove onclick first
+                    directLogoutBtn.onclick = null;
+                    // Add new handler
+                    directLogoutBtn.onclick = function(e) {
                         console.log('Logout button clicked!');
                         e.preventDefault();
                         e.stopPropagation();
                         AuthManager.logout();
                         showNotification('Logged out successfully', 'info');
-                    });
+                        return false;
+                    };
                 }
                 
                 // Attach dropdown logout button handler
                 const dropdownLogoutBtn = document.getElementById('logoutBtnDropdown');
                 if (dropdownLogoutBtn) {
-                    console.log('Attaching logout handler to dropdown button');
-                    // Clone to remove old listeners
-                    const newDropdownLogoutBtn = dropdownLogoutBtn.cloneNode(true);
-                    dropdownLogoutBtn.parentNode.replaceChild(newDropdownLogoutBtn, dropdownLogoutBtn);
-                    
-                    newDropdownLogoutBtn.addEventListener('click', (e) => {
+                    console.log('Found dropdown logout button, attaching handler');
+                    dropdownLogoutBtn.onclick = null;
+                    dropdownLogoutBtn.onclick = function(e) {
                         console.log('Dropdown logout button clicked!');
                         e.preventDefault();
                         e.stopPropagation();
                         AuthManager.logout();
                         showNotification('Logged out successfully', 'info');
-                    });
+                        return false;
+                    };
                 }
             }, 100);
             
