@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapu Rocks - Community Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-users"></i> Kapu Rocks</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#businesses" class="nav-link">Businesses</a></li>
+                <li><a href="#meetings" class="nav-link">Meetings</a></li>
+                <li><a href="#achievements" class="nav-link">Achievements</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li id="authButtons" style="position: relative;">
+                    <button id="loginBtn" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <!-- User Profile Dropdown -->
+                    <div id="userProfileDropdown" class="user-dropdown" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name" id="userDisplayName">User Name</div>
+                                <div class="user-email" id="userDisplayEmail">user@email.com</div>
+                                <div class="user-role" id="userDisplayRole">Member</div>
+                            </div>
+                        </div>
+                        <div class="user-menu">
+                            <a href="#" class="user-menu-item" id="viewProfile"><i class="fas fa-user-circle"></i> My Profile</a>
+                            <a href="#" class="user-menu-item" id="myBusinesses"><i class="fas fa-store"></i> My Businesses</a>
+                            <div id="ownerMenu" style="display: none;">
+                                <a href="#" class="user-menu-item" id="manageAdmins"><i class="fas fa-users-cog"></i> Manage Admins</a>
+                                <a href="#" class="user-menu-item" id="manageUsers"><i class="fas fa-user-friends"></i> Manage Users</a>
+                            </div>
+                            <a href="#" class="user-menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </li>
+                <li id="adminButtonContainer" style="display: none;">
+                    <button id="adminToggle" class="btn-admin"><i class="fas fa-user-shield"></i> Admin</button>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Kapu Rocks</h1>
+                <p class="hero-subtitle">Connecting the Kapu/Balija Community Worldwide</p>
+                <p class="hero-description">A platform to showcase businesses, celebrate achievements, and strengthen community bonds</p>
+                <div class="hero-buttons">
+                    <a href="#businesses" class="btn btn-primary">Explore Businesses</a>
+                    <a href="#meetings" class="btn btn-secondary">View Meetings</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-decoration"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Businesses Section -->
+    <section id="businesses" class="section">
+        <div class="container">
+            <h2 class="section-title">Community Businesses</h2>
+            <p class="section-subtitle">Support our community members' businesses</p>
+            
+            <div class="business-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="retail">Retail</button>
+                <button class="filter-btn" data-filter="services">Services</button>
+                <button class="filter-btn" data-filter="technology">Technology</button>
+                <button class="filter-btn" data-filter="food">Food & Beverage</button>
+                <button class="filter-btn" data-filter="healthcare">Healthcare</button>
+                <button class="filter-btn" data-filter="education">Education</button>
+                <button class="filter-btn" data-filter="other">Other</button>
+            </div>
+
+            <div class="business-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="businessSearch" placeholder="Search businesses...">
+            </div>
+
+            <div class="business-grid" id="businessGrid">
+                <!-- Business cards will be dynamically inserted here -->
+            </div>
+
+            <div class="add-business-section">
+                <button class="btn btn-primary" id="addBusinessBtn">
+                    <i class="fas fa-plus"></i> Add Your Business
+                </button>
+            </div>
+
+            <!-- Admin Panel for All Approvals -->
+            <div id="adminBusinessPanel" class="admin-panel" style="display: none;">
+                <h3 class="admin-panel-title">
+                    <i class="fas fa-user-shield"></i> Admin Panel - 3-Level Approval System
+                </h3>
+                <p style="margin-bottom: 2rem; color: var(--text-light);">
+                    All submissions require approval from 3 different admins before being published. 
+                    This ensures quality and prevents unauthorized content from other communities.
+                </p>
+                <div id="pendingBusinesses" class="pending-businesses-list">
+                    <!-- Pending items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meetings Section -->
+    <section id="meetings" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Community Meetings</h2>
+            <p class="section-subtitle">Join us for weekly and monthly gatherings</p>
+
+            <div class="meeting-tabs">
+                <button class="tab-btn active" data-tab="upcoming">Upcoming</button>
+                <button class="tab-btn" data-tab="weekly">Weekly</button>
+                <button class="tab-btn" data-tab="monthly">Monthly</button>
+                <button class="tab-btn" data-tab="past">Past Meetings</button>
+            </div>
+
+            <div class="meetings-container">
+                <div class="meeting-tab-content active" id="upcoming">
+                    <div class="meetings-list" id="upcomingMeetings">
+                        <!-- Upcoming meetings will be inserted here -->
+                    </div>
+                </div>
+                <div class="meeting-tab-content" id="weekly">
+                    <div class="meetings-list" id="weeklyMeetings">
+                        <!-- Weekly meetings will be inserted here -->
+                    </div>
+                </div>
+                <div class="meeting-tab-content" id="monthly">
+                    <div class="meetings-list" id="monthlyMeetings">
+                        <!-- Monthly meetings will be inserted here -->
+                    </div>
+                </div>
+                <div class="meeting-tab-content" id="past">
+                    <div class="meetings-list" id="pastMeetings">
+                        <!-- Past meetings will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-meeting-section">
+                <button class="btn btn-primary" id="addMeetingBtn">
+                    <i class="fas fa-calendar-plus"></i> Schedule a Meeting
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="section">
+        <div class="container">
+            <h2 class="section-title">Community Achievements</h2>
+            <p class="section-subtitle">Celebrating our community members' successes</p>
+
+            <div class="achievements-grid" id="achievementsGrid">
+                <!-- Achievement cards will be inserted here -->
+            </div>
+
+            <div class="add-achievement-section">
+                <button class="btn btn-primary" id="addAchievementBtn">
+                    <i class="fas fa-trophy"></i> Share an Achievement
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">About Kapu Rocks</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Kapu Rocks is a dedicated platform for the Kapu/Balija community, bringing together businesses, achievements, and community events in one place.</p>
+                    <p>Our mission is to strengthen community bonds, support local businesses, and celebrate the achievements of our community members.</p>
+                    <h3>Community Values</h3>
+                    <ul class="values-list">
+                        <li><i class="fas fa-handshake"></i> Unity and Support</li>
+                        <li><i class="fas fa-chart-line"></i> Growth and Development</li>
+                        <li><i class="fas fa-heart"></i> Celebration of Success</li>
+                        <li><i class="fas fa-network-wired"></i> Networking and Connections</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kapu Rocks</h3>
+                    <p>Connecting the Kapu/Balija Community</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#businesses">Businesses</a></li>
+                        <li><a href="#meetings">Meetings</a></li>
+                        <li><a href="#achievements">Achievements</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@kapurocks.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kapu Rocks. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Add Business Modal -->
+    <div id="businessModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Your Business</h2>
+            <form id="businessForm">
+                <div class="form-group">
+                    <label>Business Name *</label>
+                    <input type="text" id="businessName" required>
+                </div>
+                <div class="form-group">
+                    <label>Owner Name *</label>
+                    <input type="text" id="ownerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="businessCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="retail">Retail</option>
+                        <option value="services">Services</option>
+                        <option value="technology">Technology</option>
+                        <option value="food">Food & Beverage</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="businessDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contact Email</label>
+                    <input type="email" id="businessEmail">
+                </div>
+                <div class="form-group">
+                    <label>Contact Phone</label>
+                    <input type="tel" id="businessPhone">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="businessAddress">
+                </div>
+                <div class="form-group">
+                    <label>Website</label>
+                    <input type="url" id="businessWebsite">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Business</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Meeting Modal -->
+    <div id="meetingModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Schedule a Meeting</h2>
+            <form id="meetingForm">
+                <div class="form-group">
+                    <label>Meeting Title *</label>
+                    <input type="text" id="meetingTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Meeting Type *</label>
+                    <select id="meetingType" required>
+                        <option value="">Select Type</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="special">Special Event</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="meetingDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Time *</label>
+                    <input type="time" id="meetingTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" id="meetingLocation" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="meetingDescription" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Schedule Meeting</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Achievement Modal -->
+    <div id="achievementModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Share an Achievement</h2>
+            <form id="achievementForm">
+                <div class="form-group">
+                    <label>Person Name *</label>
+                    <input type="text" id="achievementPerson" required>
+                </div>
+                <div class="form-group">
+                    <label>Achievement Title *</label>
+                    <input type="text" id="achievementTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="achievementCategory">
+                        <option value="academic">Academic</option>
+                        <option value="professional">Professional</option>
+                        <option value="business">Business</option>
+                        <option value="sports">Sports</option>
+                        <option value="arts">Arts & Culture</option>
+                        <option value="community">Community Service</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="achievementDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Achievement Date</label>
+                    <input type="date" id="achievementDate">
+                </div>
+                <button type="submit" class="btn btn-primary">Share Achievement</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login to Kapu Rocks</h2>
+            <div class="login-tabs">
+                <button class="login-tab-btn active" data-tab="gmail">Gmail</button>
+                <button class="login-tab-btn" data-tab="mobile">Mobile</button>
+            </div>
+            
+            <!-- Gmail Login -->
+            <div id="gmailLogin" class="login-tab-content active">
+                <form id="gmailLoginForm">
+                    <div class="form-group">
+                        <label>Gmail Address *</label>
+                        <input type="email" id="gmailEmail" placeholder="your.email@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="gmailPassword" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fab fa-google"></i> Login with Gmail
+                    </button>
+                    <p class="login-note">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+                </form>
+            </div>
+
+            <!-- Mobile Login -->
+            <div id="mobileLogin" class="login-tab-content">
+                <form id="mobileLoginForm">
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" id="mobileNumber" placeholder="+91 98765 43210" required>
+                    </div>
+                    <div class="form-group">
+                        <label>OTP *</label>
+                        <div class="otp-container">
+                            <input type="text" id="mobileOTP" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                            <button type="button" class="btn btn-secondary" id="sendOTP">Send OTP</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-mobile-alt"></i> Login with Mobile
+                    </button>
+                    <p class="login-note">Don't have an account? <a href="#" id="showRegisterMobile">Register here</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Register for Kapu Rocks</h2>
+            <div class="login-tabs">
+                <button class="login-tab-btn active" data-tab="gmail-register">Gmail</button>
+                <button class="login-tab-btn" data-tab="mobile-register">Mobile</button>
+            </div>
+            
+            <!-- Gmail Register -->
+            <div id="gmailRegister" class="login-tab-content active">
+                <form id="gmailRegisterForm">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="regGmailName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gmail Address *</label>
+                        <input type="email" id="regGmailEmail" placeholder="your.email@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number (Optional - for sync)</label>
+                        <input type="tel" id="regGmailMobile" placeholder="+91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="regGmailPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password *</label>
+                        <input type="password" id="regGmailPasswordConfirm" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fab fa-google"></i> Register with Gmail
+                    </button>
+                    <p class="login-note">Already have an account? <a href="#" id="showLoginGmail">Login here</a></p>
+                </form>
+            </div>
+
+            <!-- Mobile Register -->
+            <div id="mobileRegister" class="login-tab-content">
+                <form id="mobileRegisterForm">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="regMobileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" id="regMobileNumber" placeholder="+91 98765 43210" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gmail Address * (Required for sync)</label>
+                        <input type="email" id="regMobileEmail" placeholder="your.email@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>OTP *</label>
+                        <div class="otp-container">
+                            <input type="text" id="regMobileOTP" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                            <button type="button" class="btn btn-secondary" id="sendRegOTP">Send OTP</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-mobile-alt"></i> Register with Mobile
+                    </button>
+                    <p class="login-note">Already have an account? <a href="#" id="showLoginMobile">Login here</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
