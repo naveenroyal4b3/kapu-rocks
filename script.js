@@ -238,8 +238,11 @@ const AuthManager = {
                 newProfileBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    const isVisible = userProfileDropdown.style.display === 'block';
-                    userProfileDropdown.style.display = isVisible ? 'none' : 'block';
+                    const dropdown = document.getElementById('userProfileDropdown');
+                    if (dropdown) {
+                        const isVisible = dropdown.style.display === 'block';
+                        dropdown.style.display = isVisible ? 'none' : 'block';
+                    }
                 });
             }
             
