@@ -1721,6 +1721,47 @@ const OwnerManager = {
 window.AdminManager = AdminManager;
 window.OwnerManager = OwnerManager;
 
+// Global functions for onclick handlers
+function handleLogout() {
+    console.log('handleLogout called');
+    AuthManager.currentUser = null;
+    localStorage.removeItem('currentSession');
+    localStorage.setItem('adminMode', 'false');
+    AuthManager.updateUI();
+    AdminManager.updateUI();
+    showNotification('Logged out successfully', 'info');
+}
+
+function handleAddBusiness() {
+    console.log('handleAddBusiness called');
+    if (!AuthManager.isAuthenticated()) {
+        showNotification('Please login to add a business', 'error');
+        ModalManager.open('loginModal');
+        return;
+    }
+    ModalManager.open('businessModal');
+}
+
+function handleAddMeeting() {
+    console.log('handleAddMeeting called');
+    if (!AuthManager.isAuthenticated()) {
+        showNotification('Please login to schedule a meeting', 'error');
+        ModalManager.open('loginModal');
+        return;
+    }
+    ModalManager.open('meetingModal');
+}
+
+function handleAddAchievement() {
+    console.log('handleAddAchievement called');
+    if (!AuthManager.isAuthenticated()) {
+        showNotification('Please login to share achievements', 'error');
+        ModalManager.open('loginModal');
+        return;
+    }
+    ModalManager.open('achievementModal');
+}
+
 // Run when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
 

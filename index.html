@@ -41,13 +41,13 @@
                                 <a href="#" class="user-menu-item" id="manageAdmins"><i class="fas fa-users-cog"></i> Manage Admins</a>
                                 <a href="#" class="user-menu-item" id="manageUsers"><i class="fas fa-user-friends"></i> Manage Users</a>
                             </div>
-                            <a href="#" class="user-menu-item" id="logoutBtnDropdown"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="#" class="user-menu-item" id="logoutBtnDropdown" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </li>
                 <!-- Direct Logout Button (visible when logged in) -->
                 <li id="logoutBtnContainer" style="display: none;">
-                    <button id="logoutBtn" class="btn-logout">
+                    <button id="logoutBtn" class="btn-logout" onclick="handleLogout(); return false;">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </li>
@@ -108,7 +108,7 @@
             </div>
 
             <div class="add-business-section">
-                <button class="btn btn-primary" id="addBusinessBtn">
+                <button class="btn btn-primary" id="addBusinessBtn" onclick="handleAddBusiness(); return false;">
                     <i class="fas fa-plus"></i> Add Your Business
                 </button>
             </div>
@@ -166,7 +166,7 @@
             </div>
 
             <div class="add-meeting-section">
-                <button class="btn btn-primary" id="addMeetingBtn">
+                <button class="btn btn-primary" id="addMeetingBtn" onclick="handleAddMeeting(); return false;">
                     <i class="fas fa-calendar-plus"></i> Schedule a Meeting
                 </button>
             </div>
@@ -184,7 +184,7 @@
             </div>
 
             <div class="add-achievement-section">
-                <button class="btn btn-primary" id="addAchievementBtn">
+                <button class="btn btn-primary" id="addAchievementBtn" onclick="handleAddAchievement(); return false;">
                     <i class="fas fa-trophy"></i> Share an Achievement
                 </button>
             </div>
