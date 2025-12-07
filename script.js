@@ -1499,6 +1499,13 @@ const init = () => {
         const target = e.target.closest('button, a');
         if (!target) return;
         
+        // Google Sign-In button
+        if (target.id === 'googleSignInBtn') {
+            console.log('Google Sign-In clicked');
+            handleGoogleSignIn();
+            return;
+        }
+        
         // Login button
         if (target.id === 'loginBtn' || target.closest('#loginBtn')) {
             console.log('Login button clicked');
@@ -1720,6 +1727,52 @@ const OwnerManager = {
 // Expose AdminManager and OwnerManager functions globally for onclick handlers
 window.AdminManager = AdminManager;
 window.OwnerManager = OwnerManager;
+
+// Google Sign-In Handler
+function handleGoogleSignIn() {
+    console.log('Google Sign-In clicked');
+    showNotification('Google Sign-In: This is a demo. In production, this would use Google OAuth 2.0', 'info');
+    
+    // Demo: Auto-login with a test account
+    const demoUser = {
+        email: 'demo@gmail.com',
+        name: 'Demo User (Google)',
+        password: 'demo123'
+    };
+    
+    // Check if user exists, if not create
+    const users = Storage.get('users');
+    let user = users.find(u => u.email === demoUser.email);
+    
+    if (!user) {
+        const newUser = {
+            id: Date.now(),
+            name: demoUser.name,
+            email: demoUser.email,
+            mobile: '',
+            password: demoUser.password,
+            role: 'user',
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        Storage.set('users', users);
+        user = newUser;
+    }
+    
+    // Login the user
+    AuthManager.currentUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile || '',
+        role: user.role
+    };
+    Storage.setItem('currentSession', AuthManager.currentUser);
+    AuthManager.updateUI();
+    
+    ModalManager.close('loginModal');
+    showNotification('Signed in with Google successfully!', 'success');
+}
 
 // Global functions for onclick handlers
 function handleLogout() {

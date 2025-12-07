@@ -1051,6 +1051,12 @@ body {
     transform: translateY(-2px);
 }
 
+.btn-google:hover {
+    background: #f8f9fa !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
 .user-profile-btn {
     background: var(--accent-color);
     color: white;
