@@ -382,16 +382,16 @@
             <span class="close">&times;</span>
             <h2>Login to Kapu Rocks</h2>
             <div class="login-tabs">
-                <button class="login-tab-btn active" data-tab="gmail">Gmail</button>
+                <button class="login-tab-btn active" data-tab="gmail">Email</button>
                 <button class="login-tab-btn" data-tab="mobile">Mobile</button>
             </div>
             
-            <!-- Gmail Login -->
+            <!-- Email Login -->
             <div id="gmailLogin" class="login-tab-content active">
                 <form id="gmailLoginForm">
                     <div class="form-group">
-                        <label>Gmail Address *</label>
-                        <input type="email" id="gmailEmail" placeholder="your.email@gmail.com" required>
+                        <label>Email Address *</label>
+                        <input type="email" id="gmailEmail" placeholder="your.email@example.com" required>
                     </div>
                     <div class="form-group">
                         <label>Password *</label>
@@ -399,7 +399,7 @@
                         <a href="#" id="forgotPasswordLink" class="forgot-link" style="float: right; margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary-color);">Forgot Password?</a>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        <i class="fab fa-google"></i> Login with Gmail
+                        <i class="fas fa-sign-in-alt"></i> Login
                     </button>
                     <p class="login-note">
                         Don't have an account? <a href="#" id="showRegister">Register here</a><br>
@@ -440,11 +440,11 @@
             <span class="close">&times;</span>
             <h2>Register for Kapu Rocks</h2>
             <div class="login-tabs">
-                <button class="login-tab-btn active" data-tab="gmail-register">Gmail</button>
+                <button class="login-tab-btn active" data-tab="gmail-register">Email</button>
                 <button class="login-tab-btn" data-tab="mobile-register">Mobile</button>
             </div>
             
-            <!-- Gmail Register -->
+            <!-- Email Register -->
             <div id="gmailRegister" class="login-tab-content active">
                 <form id="gmailRegisterForm">
                     <div class="form-group">
@@ -452,8 +452,8 @@
                         <input type="text" id="regGmailName" required>
                     </div>
                     <div class="form-group">
-                        <label>Gmail Address *</label>
-                        <input type="email" id="regGmailEmail" placeholder="your.email@gmail.com" required>
+                        <label>Email Address *</label>
+                        <input type="email" id="regGmailEmail" placeholder="your.email@example.com" required>
                     </div>
                     <div class="form-group">
                         <label>Mobile Number (Optional - for sync)</label>
@@ -468,7 +468,7 @@
                         <input type="password" id="regGmailPasswordConfirm" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        <i class="fab fa-google"></i> Register with Gmail
+                        <i class="fas fa-user-plus"></i> Register
                     </button>
                     <p class="login-note">Already have an account? <a href="#" id="showLoginGmail">Login here</a></p>
                 </form>
@@ -486,8 +486,8 @@
                         <input type="tel" id="regMobileNumber" placeholder="+91 98765 43210" required>
                     </div>
                     <div class="form-group">
-                        <label>Gmail Address * (Required for sync)</label>
-                        <input type="email" id="regMobileEmail" placeholder="your.email@gmail.com" required>
+                        <label>Email Address * (Required for sync)</label>
+                        <input type="email" id="regMobileEmail" placeholder="your.email@example.com" required>
                     </div>
                     <div class="form-group">
                         <label>OTP *</label>
