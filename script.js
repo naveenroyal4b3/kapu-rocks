@@ -225,21 +225,23 @@ const AuthManager = {
                 document.getElementById('ownerMenu').style.display = 'none';
             }
             
-            // Add profile button click handler
+            // Ensure dropdown is initially hidden
+            userProfileDropdown.style.display = 'none';
+            
+            // Add profile button click handler (remove old one first)
             const profileBtn = document.getElementById('userProfileBtn');
             if (profileBtn) {
-                profileBtn.addEventListener('click', (e) => {
+                // Clone to remove old listeners
+                const newProfileBtn = profileBtn.cloneNode(true);
+                profileBtn.parentNode.replaceChild(newProfileBtn, profileBtn);
+                
+                newProfileBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    userProfileDropdown.style.display = userProfileDropdown.style.display === 'none' ? 'block' : 'none';
+                    e.preventDefault();
+                    const isVisible = userProfileDropdown.style.display === 'block';
+                    userProfileDropdown.style.display = isVisible ? 'none' : 'block';
                 });
             }
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#userProfileBtn') && !e.target.closest('#userProfileDropdown')) {
-                    userProfileDropdown.style.display = 'none';
-                }
-            });
             
             // Attach logout button handler
             const logoutBtn = document.getElementById('logoutBtn');
@@ -250,9 +252,9 @@ const AuthManager = {
                 
                 newLogoutBtn.addEventListener('click', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     AuthManager.logout();
                     showNotification('Logged out successfully', 'info');
-                    userProfileDropdown.style.display = 'none';
                 });
             }
             
@@ -262,7 +264,9 @@ const AuthManager = {
                 <button id="loginBtn" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
             `;
             adminButtonContainer.style.display = 'none';
-            userProfileDropdown.style.display = 'none';
+            if (userProfileDropdown) {
+                userProfileDropdown.style.display = 'none';
+            }
         }
     }
 };
@@ -1445,6 +1449,16 @@ const init = () => {
     document.addEventListener('click', (e) => {
         if (e.target.id === 'loginBtn' || e.target.closest('#loginBtn')) {
             ModalManager.open('loginModal');
+        }
+    });
+    
+    // Setup global click handler for closing user profile dropdown
+    document.addEventListener('click', (e) => {
+        const userProfileDropdown = document.getElementById('userProfileDropdown');
+        if (userProfileDropdown && 
+            !e.target.closest('#userProfileBtn') && 
+            !e.target.closest('#userProfileDropdown')) {
+            userProfileDropdown.style.display = 'none';
         }
     });
     
