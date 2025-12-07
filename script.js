@@ -255,39 +255,8 @@ const AuthManager = {
                 });
             }
             
-            // Attach logout button handlers using direct assignment (no cloning issues)
-            setTimeout(() => {
-                const directLogoutBtn = document.getElementById('logoutBtn');
-                if (directLogoutBtn) {
-                    console.log('Found logout button, attaching handler');
-                    // Remove onclick first
-                    directLogoutBtn.onclick = null;
-                    // Add new handler
-                    directLogoutBtn.onclick = function(e) {
-                        console.log('Logout button clicked!');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        AuthManager.logout();
-                        showNotification('Logged out successfully', 'info');
-                        return false;
-                    };
-                }
-                
-                // Attach dropdown logout button handler
-                const dropdownLogoutBtn = document.getElementById('logoutBtnDropdown');
-                if (dropdownLogoutBtn) {
-                    console.log('Found dropdown logout button, attaching handler');
-                    dropdownLogoutBtn.onclick = null;
-                    dropdownLogoutBtn.onclick = function(e) {
-                        console.log('Dropdown logout button clicked!');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        AuthManager.logout();
-                        showNotification('Logged out successfully', 'info');
-                        return false;
-                    };
-                }
-            }, 100);
+            // Logout handlers are now managed globally in init()
+            // No need to attach handlers here - global event delegation handles it
             
         } else {
             // Show login button, hide logout button
@@ -1564,6 +1533,33 @@ const init = () => {
     document.addEventListener('click', (e) => {
         if (e.target.id === 'loginBtn' || e.target.closest('#loginBtn')) {
             ModalManager.open('loginModal');
+        }
+    });
+    
+    // Setup global logout button handler - catches all logout button clicks
+    document.addEventListener('click', (e) => {
+        // Check if clicked element or its parent is logout button
+        const logoutBtn = e.target.closest('#logoutBtn');
+        const logoutBtnDropdown = e.target.closest('#logoutBtnDropdown');
+        
+        if (logoutBtn || logoutBtnDropdown) {
+            console.log('Logout clicked via global handler');
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Perform logout
+            console.log('Logging out user:', AuthManager.currentUser);
+            AuthManager.currentUser = null;
+            localStorage.removeItem('currentSession');
+            localStorage.setItem('adminMode', 'false');
+            
+            // Update UI
+            AuthManager.updateUI();
+            AdminManager.updateUI();
+            
+            // Show notification
+            showNotification('Logged out successfully', 'info');
+            console.log('Logout complete');
         }
     });
     
