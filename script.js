@@ -241,6 +241,21 @@ const AuthManager = {
                 }
             });
             
+            // Attach logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                // Remove existing listeners by cloning and replacing
+                const newLogoutBtn = logoutBtn.cloneNode(true);
+                logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+                
+                newLogoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    AuthManager.logout();
+                    showNotification('Logged out successfully', 'info');
+                    userProfileDropdown.style.display = 'none';
+                });
+            }
+            
         } else {
             // Show login button
             authButtons.innerHTML = `
