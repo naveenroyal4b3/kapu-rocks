@@ -207,9 +207,9 @@ const AuthManager = {
             `;
             
             // Show logout button directly
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.style.display = 'block';
+            const logoutBtnContainer = document.getElementById('logoutBtnContainer');
+            if (logoutBtnContainer) {
+                logoutBtnContainer.style.display = 'block';
             }
             
             // Show admin button if user is admin or owner
@@ -287,9 +287,9 @@ const AuthManager = {
             authButtons.innerHTML = `
                 <button id="loginBtn" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
             `;
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.style.display = 'none';
+            const logoutBtnContainer = document.getElementById('logoutBtnContainer');
+            if (logoutBtnContainer) {
+                logoutBtnContainer.style.display = 'none';
             }
             adminButtonContainer.style.display = 'none';
             if (userProfileDropdown) {
