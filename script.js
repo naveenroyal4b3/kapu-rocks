@@ -1469,45 +1469,10 @@ const AdminManager = {
     }
 };
 
-// Button Handlers
+// Button Handlers - now handled by global event delegation in init()
 const initButtons = () => {
-    document.getElementById('addBusinessBtn').addEventListener('click', () => {
-        if (!AuthManager.isAuthenticated()) {
-            showNotification('Please login to add a business', 'error');
-            ModalManager.open('loginModal');
-            return;
-        }
-        ModalManager.open('businessModal');
-    });
-
-    document.getElementById('addMeetingBtn').addEventListener('click', () => {
-        if (!AuthManager.isAuthenticated()) {
-            showNotification('Please login to schedule a meeting', 'error');
-            ModalManager.open('loginModal');
-            return;
-        }
-        ModalManager.open('meetingModal');
-    });
-
-    document.getElementById('addAchievementBtn').addEventListener('click', () => {
-        if (!AuthManager.isAuthenticated()) {
-            showNotification('Please login to share achievements', 'error');
-            ModalManager.open('loginModal');
-            return;
-        }
-        ModalManager.open('achievementModal');
-    });
-
-    // Admin toggle - handler added dynamically in AuthManager.updateUI
-    const adminToggle = document.getElementById('adminToggle');
-    if (adminToggle) {
-        adminToggle.addEventListener('click', () => {
-            AdminManager.toggleAdminMode();
-        });
-    }
-
-    // Login button - handler added dynamically in AuthManager.updateUI
-    // This will be set up after auth initialization
+    // All button clicks are now handled globally
+    // No need for individual event listeners
 };
 
 // Initialize App
@@ -1529,37 +1494,77 @@ const init = () => {
     initFilters();
     initButtons();
     
-    // Setup login button handler (after auth init)
+    // Setup GLOBAL click handler for ALL buttons
     document.addEventListener('click', (e) => {
-        if (e.target.id === 'loginBtn' || e.target.closest('#loginBtn')) {
-            ModalManager.open('loginModal');
-        }
-    });
-    
-    // Setup global logout button handler - catches all logout button clicks
-    document.addEventListener('click', (e) => {
-        // Check if clicked element or its parent is logout button
-        const logoutBtn = e.target.closest('#logoutBtn');
-        const logoutBtnDropdown = e.target.closest('#logoutBtnDropdown');
+        const target = e.target.closest('button, a');
+        if (!target) return;
         
-        if (logoutBtn || logoutBtnDropdown) {
-            console.log('Logout clicked via global handler');
+        // Login button
+        if (target.id === 'loginBtn' || target.closest('#loginBtn')) {
+            console.log('Login button clicked');
+            ModalManager.open('loginModal');
+            return;
+        }
+        
+        // Logout buttons
+        if (target.id === 'logoutBtn' || target.id === 'logoutBtnDropdown') {
+            console.log('Logout clicked');
             e.preventDefault();
             e.stopPropagation();
             
-            // Perform logout
-            console.log('Logging out user:', AuthManager.currentUser);
             AuthManager.currentUser = null;
             localStorage.removeItem('currentSession');
             localStorage.setItem('adminMode', 'false');
             
-            // Update UI
             AuthManager.updateUI();
             AdminManager.updateUI();
             
-            // Show notification
             showNotification('Logged out successfully', 'info');
             console.log('Logout complete');
+            return;
+        }
+        
+        // Add Business button
+        if (target.id === 'addBusinessBtn') {
+            console.log('Add business clicked');
+            if (!AuthManager.isAuthenticated()) {
+                showNotification('Please login to add a business', 'error');
+                ModalManager.open('loginModal');
+                return;
+            }
+            ModalManager.open('businessModal');
+            return;
+        }
+        
+        // Add Meeting button
+        if (target.id === 'addMeetingBtn') {
+            console.log('Add meeting clicked');
+            if (!AuthManager.isAuthenticated()) {
+                showNotification('Please login to schedule a meeting', 'error');
+                ModalManager.open('loginModal');
+                return;
+            }
+            ModalManager.open('meetingModal');
+            return;
+        }
+        
+        // Add Achievement button
+        if (target.id === 'addAchievementBtn') {
+            console.log('Add achievement clicked');
+            if (!AuthManager.isAuthenticated()) {
+                showNotification('Please login to share achievements', 'error');
+                ModalManager.open('loginModal');
+                return;
+            }
+            ModalManager.open('achievementModal');
+            return;
+        }
+        
+        // Admin toggle button
+        if (target.id === 'adminToggle') {
+            console.log('Admin toggle clicked');
+            AdminManager.toggleAdminMode();
+            return;
         }
     });
     
