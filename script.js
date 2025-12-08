@@ -81,22 +81,35 @@ const AuthManager = {
     },
 
     login: (emailOrMobile, password, loginType) => {
+        console.log('=== LOGIN ATTEMPT ===');
+        console.log('Email/Mobile:', emailOrMobile);
+        console.log('Password:', password);
+        console.log('Type:', loginType);
+        
         const users = Storage.get('users');
+        console.log('Total users in DB:', users.length);
         let user = null;
 
         if (loginType === 'gmail') {
-            user = users.find(u => u.email === emailOrMobile && u.password === password);
+            console.log('Searching for user with email:', emailOrMobile);
+            user = users.find(u => {
+                console.log('Checking:', u.email, '===', emailOrMobile, '?', u.email === emailOrMobile);
+                console.log('Password check:', u.password, '===', password, '?', u.password === password);
+                return u.email === emailOrMobile && u.password === password;
+            });
+            console.log('Found user:', user);
         } else if (loginType === 'mobile') {
-            // For mobile, we'll use OTP verification (simplified for demo)
             user = users.find(u => u.mobile === emailOrMobile);
-            if (user && password === '123456') { // Demo OTP
-                // In production, verify OTP properly
+            if (user && password === '123456') {
+                console.log('Mobile OTP verified');
             } else {
+                console.log('Invalid OTP');
                 return { success: false, message: 'Invalid OTP' };
             }
         }
 
         if (user) {
+            console.log('Login SUCCESS for:', user.name);
             AuthManager.currentUser = {
                 id: user.id,
                 name: user.name,
@@ -109,6 +122,7 @@ const AuthManager = {
             return { success: true, user: AuthManager.currentUser };
         }
 
+        console.log('Login FAILED - no matching user found');
         return { success: false, message: 'Invalid credentials' };
     },
 
