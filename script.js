@@ -243,16 +243,23 @@ const AuthManager = {
                 adminButtonContainer.style.display = 'none';
             }
             
-            // Update user profile dropdown
-            document.getElementById('userDisplayName').textContent = AuthManager.currentUser.name;
-            document.getElementById('userDisplayEmail').textContent = AuthManager.currentUser.email || AuthManager.currentUser.mobile;
-            document.getElementById('userDisplayRole').textContent = AuthManager.currentUser.role.charAt(0).toUpperCase() + AuthManager.currentUser.role.slice(1);
+            // Update user profile dropdown (with null checks)
+            const userDisplayName = document.getElementById('userDisplayName');
+            const userDisplayEmail = document.getElementById('userDisplayEmail');
+            const userDisplayRole = document.getElementById('userDisplayRole');
+            
+            if (userDisplayName) userDisplayName.textContent = AuthManager.currentUser.name;
+            if (userDisplayEmail) userDisplayEmail.textContent = AuthManager.currentUser.email || AuthManager.currentUser.mobile;
+            if (userDisplayRole) userDisplayRole.textContent = AuthManager.currentUser.role.charAt(0).toUpperCase() + AuthManager.currentUser.role.slice(1);
             
             // Show owner menu if owner
-            if (AuthManager.hasRole('owner')) {
-                document.getElementById('ownerMenu').style.display = 'block';
-            } else {
-                document.getElementById('ownerMenu').style.display = 'none';
+            const ownerMenu = document.getElementById('ownerMenu');
+            if (ownerMenu) {
+                if (AuthManager.hasRole('owner')) {
+                    ownerMenu.style.display = 'block';
+                } else {
+                    ownerMenu.style.display = 'none';
+                }
             }
             
             // Ensure dropdown is initially hidden
