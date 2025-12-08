@@ -903,19 +903,23 @@ const initForms = () => {
         gmailLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             console.log('Email login form submitted');
+            
+            // Close modal immediately
+            ModalManager.close('loginModal');
+            
             const email = document.getElementById('gmailEmail').value;
             const password = document.getElementById('gmailPassword').value;
             console.log('Attempting login with:', email);
             const result = AuthManager.login(email, password, 'gmail');
             console.log('Login result:', result);
+            
             if (result.success) {
-                showNotification('Login successful!', 'success');
-                ModalManager.close('loginModal');
+                showNotification('Login successful! Welcome ' + result.user.name, 'success');
                 // Sync mobile if provided
                 const mobile = document.getElementById('gmailEmail').dataset.mobile;
                 if (mobile) AuthManager.syncAccounts(email, mobile);
             } else {
-                showNotification(result.message || 'Login failed', 'error');
+                showNotification(result.message || 'Invalid email or password', 'error');
             }
         });
     } else {
@@ -927,16 +931,20 @@ const initForms = () => {
         mobileLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             console.log('Mobile login form submitted');
+            
+            // Close modal immediately
+            ModalManager.close('loginModal');
+            
             const mobile = document.getElementById('mobileNumber').value;
             const otp = document.getElementById('mobileOTP').value;
             console.log('Attempting mobile login with:', mobile);
             const result = AuthManager.login(mobile, otp, 'mobile');
             console.log('Mobile login result:', result);
+            
             if (result.success) {
-                showNotification('Login successful!', 'success');
-                ModalManager.close('loginModal');
+                showNotification('Login successful! Welcome ' + result.user.name, 'success');
             } else {
-                showNotification(result.message || 'Login failed', 'error');
+                showNotification(result.message || 'Invalid mobile or OTP', 'error');
             }
         });
     } else {
