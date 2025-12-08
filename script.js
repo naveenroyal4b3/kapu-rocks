@@ -974,15 +974,21 @@ const initForms = () => {
             ModalManager.close('loginModal');
             
             // Attempt login
-            const result = AuthManager.login(email, password, 'gmail');
-            
-            if (result && result.success) {
-                showNotification('Welcome ' + result.user.name + '!', 'success');
-                // Clear form
-                emailInput.value = '';
-                passwordInput.value = '';
-            } else {
-                showNotification(result.message || 'Invalid email or password', 'error');
+            try {
+                const result = AuthManager.login(email, password, 'gmail');
+                
+                if (result && result.success && result.user) {
+                    showNotification('Welcome ' + result.user.name + '!', 'success');
+                    // Clear form
+                    emailInput.value = '';
+                    passwordInput.value = '';
+                } else {
+                    const errorMsg = (result && result.message) ? result.message : 'Invalid email or password';
+                    showNotification(errorMsg, 'error');
+                }
+            } catch (error) {
+                console.error('Login form error:', error);
+                showNotification('Login error. Please try again.', 'error');
             }
         });
     }
