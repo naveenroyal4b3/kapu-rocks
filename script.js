@@ -28,10 +28,18 @@ const AuthManager = {
     
     init: () => {
         // Load current session
-        const session = Storage.getItem('currentSession');
-        if (session) {
-            AuthManager.currentUser = session;
-            AuthManager.updateUI();
+        try {
+            const sessionData = localStorage.getItem('currentSession');
+            if (sessionData && sessionData !== 'null') {
+                const session = JSON.parse(sessionData);
+                if (session && session.id) {
+                    AuthManager.currentUser = session;
+                    AuthManager.updateUI();
+                }
+            }
+        } catch (e) {
+            console.error('Session load error:', e);
+            localStorage.removeItem('currentSession');
         }
         
         // Initialize sample users (for demo) - FORCE RESET to ensure new accounts are added
@@ -81,49 +89,49 @@ const AuthManager = {
     },
 
     login: (emailOrMobile, password, loginType) => {
-        console.log('=== LOGIN ATTEMPT ===');
-        console.log('Email/Mobile:', emailOrMobile);
-        console.log('Password:', password);
-        console.log('Type:', loginType);
-        
-        const users = Storage.get('users');
-        console.log('Total users in DB:', users.length);
-        let user = null;
-
-        if (loginType === 'gmail') {
-            console.log('Searching for user with email:', emailOrMobile);
-            user = users.find(u => {
-                console.log('Checking:', u.email, '===', emailOrMobile, '?', u.email === emailOrMobile);
-                console.log('Password check:', u.password, '===', password, '?', u.password === password);
-                return u.email === emailOrMobile && u.password === password;
-            });
-            console.log('Found user:', user);
-        } else if (loginType === 'mobile') {
-            user = users.find(u => u.mobile === emailOrMobile);
-            if (user && password === '123456') {
-                console.log('Mobile OTP verified');
-            } else {
-                console.log('Invalid OTP');
-                return { success: false, message: 'Invalid OTP' };
+        try {
+            const users = Storage.get('users');
+            
+            if (!users || users.length === 0) {
+                return { success: false, message: 'No users found. Please refresh the page.' };
             }
-        }
+            
+            // Trim inputs to avoid whitespace issues
+            const cleanEmail = emailOrMobile.trim().toLowerCase();
+            const cleanPassword = password.trim();
+            
+            let user = null;
 
-        if (user) {
-            console.log('Login SUCCESS for:', user.name);
-            AuthManager.currentUser = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                mobile: user.mobile,
-                role: user.role
-            };
-            Storage.setItem('currentSession', AuthManager.currentUser);
-            AuthManager.updateUI();
-            return { success: true, user: AuthManager.currentUser };
-        }
+            if (loginType === 'gmail') {
+                user = users.find(u => 
+                    u.email && u.email.trim().toLowerCase() === cleanEmail && 
+                    u.password && u.password.trim() === cleanPassword
+                );
+            } else if (loginType === 'mobile') {
+                user = users.find(u => u.mobile && u.mobile.trim() === emailOrMobile.trim());
+                if (!user || cleanPassword !== '123456') {
+                    return { success: false, message: 'Invalid mobile number or OTP' };
+                }
+            }
 
-        console.log('Login FAILED - no matching user found');
-        return { success: false, message: 'Invalid credentials' };
+            if (user) {
+                AuthManager.currentUser = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    mobile: user.mobile,
+                    role: user.role
+                };
+                localStorage.setItem('currentSession', JSON.stringify(AuthManager.currentUser));
+                AuthManager.updateUI();
+                return { success: true, user: AuthManager.currentUser };
+            }
+
+            return { success: false, message: 'Invalid email or password' };
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, message: 'Login failed. Please try again.' };
+        }
     },
 
     register: (userData, registerType) => {
@@ -942,30 +950,41 @@ const initForms = () => {
     // Login Forms
     const gmailLoginForm = document.getElementById('gmailLoginForm');
     if (gmailLoginForm) {
-        gmailLoginForm.addEventListener('submit', (e) => {
+        gmailLoginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Email login form submitted');
+            e.stopPropagation();
             
-            // Close modal immediately
+            const emailInput = document.getElementById('gmailEmail');
+            const passwordInput = document.getElementById('gmailPassword');
+            
+            if (!emailInput || !passwordInput) {
+                showNotification('Form error. Please refresh the page.', 'error');
+                return;
+            }
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            if (!email || !password) {
+                showNotification('Please enter both email and password', 'error');
+                return;
+            }
+            
+            // Close modal
             ModalManager.close('loginModal');
             
-            const email = document.getElementById('gmailEmail').value;
-            const password = document.getElementById('gmailPassword').value;
-            console.log('Attempting login with:', email);
+            // Attempt login
             const result = AuthManager.login(email, password, 'gmail');
-            console.log('Login result:', result);
             
-            if (result.success) {
-                showNotification('Login successful! Welcome ' + result.user.name, 'success');
-                // Sync mobile if provided
-                const mobile = document.getElementById('gmailEmail').dataset.mobile;
-                if (mobile) AuthManager.syncAccounts(email, mobile);
+            if (result && result.success) {
+                showNotification('Welcome ' + result.user.name + '!', 'success');
+                // Clear form
+                emailInput.value = '';
+                passwordInput.value = '';
             } else {
                 showNotification(result.message || 'Invalid email or password', 'error');
             }
         });
-    } else {
-        console.error('gmailLoginForm not found!');
     }
 
     const mobileLoginForm = document.getElementById('mobileLoginForm');
