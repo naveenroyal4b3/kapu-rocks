@@ -1819,6 +1819,34 @@ function handleGoogleSignIn() {
     showNotification('Signed in with Google successfully!', 'success');
 }
 
+// Debug function - check what users exist
+function debugShowUsers() {
+    const users = Storage.get('users');
+    console.log('=== ALL USERS IN DATABASE ===');
+    console.table(users.map(u => ({
+        ID: u.id,
+        Name: u.name,
+        Email: u.email,
+        Password: u.password,
+        Role: u.role
+    })));
+    alert('Check console (F12) to see all users. Press F12 and look for the table.');
+    return users;
+}
+
+// Debug function - reset database
+function debugResetDatabase() {
+    if (confirm('This will delete ALL data and reset to defaults. Continue?')) {
+        localStorage.clear();
+        alert('Database cleared! Refresh the page to reload default accounts.');
+        window.location.reload();
+    }
+}
+
+// Make debug functions available globally
+window.debugShowUsers = debugShowUsers;
+window.debugResetDatabase = debugResetDatabase;
+
 // Global functions for onclick handlers
 function handleLogout() {
     console.log('handleLogout called');
