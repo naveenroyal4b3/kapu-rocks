@@ -34,38 +34,50 @@ const AuthManager = {
             AuthManager.updateUI();
         }
         
-        // Initialize sample users (for demo)
-        if (Storage.get('users').length === 0) {
-            Storage.set('users', [
-                {
-                    id: 1,
-                    name: 'Admin User',
-                    email: 'admin@kapurocks.com',
-                    mobile: '+91 98765 43210',
-                    password: 'admin123', // In production, this should be hashed
-                    role: 'admin',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    name: 'Owner User',
-                    email: 'owner@kapurocks.com',
-                    mobile: '+91 98765 43211',
-                    password: 'owner123',
-                    role: 'owner',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 3,
-                    name: 'Naveen Kumar',
-                    email: 'naveenroyal4b3@gmail.com',
-                    mobile: '+91 98765 43212',
-                    password: 'naveen123',
-                    role: 'owner',
-                    createdAt: new Date().toISOString()
-                }
-            ]);
-        }
+        // Initialize sample users (for demo) - FORCE RESET to ensure new accounts are added
+        const users = Storage.get('users');
+        
+        // Define default users
+        const defaultUsers = [
+            {
+                id: 1,
+                name: 'Admin User',
+                email: 'admin@kapurocks.com',
+                mobile: '+91 98765 43210',
+                password: 'admin123',
+                role: 'admin',
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                name: 'Owner User',
+                email: 'owner@kapurocks.com',
+                mobile: '+91 98765 43211',
+                password: 'owner123',
+                role: 'owner',
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 3,
+                name: 'Naveen Kumar',
+                email: 'naveenroyal4b3@gmail.com',
+                mobile: '+91 98765 43212',
+                password: 'naveen123',
+                role: 'owner',
+                createdAt: new Date().toISOString()
+            }
+        ];
+        
+        // Add default users if they don't exist
+        defaultUsers.forEach(defaultUser => {
+            const exists = users.find(u => u.email === defaultUser.email);
+            if (!exists) {
+                users.push(defaultUser);
+            }
+        });
+        
+        // Save updated users list
+        Storage.set('users', users);
     },
 
     login: (emailOrMobile, password, loginType) => {
