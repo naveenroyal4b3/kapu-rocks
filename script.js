@@ -1868,6 +1868,35 @@ function debugResetDatabase() {
 window.debugShowUsers = debugShowUsers;
 window.debugResetDatabase = debugResetDatabase;
 
+// Quick login function - TEMPORARY WORKAROUND
+function quickLogin(userType) {
+    const users = Storage.get('users');
+    let user;
+    
+    if (userType === 'admin') {
+        user = users.find(u => u.email === 'admin@kapurocks.com');
+    } else if (userType === 'naveen') {
+        user = users.find(u => u.email === 'naveenroyal4b3@gmail.com');
+    }
+    
+    if (user) {
+        AuthManager.currentUser = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+            role: user.role
+        };
+        Storage.setItem('currentSession', AuthManager.currentUser);
+        AuthManager.updateUI();
+        ModalManager.close('loginModal');
+        showNotification('Logged in as ' + user.name, 'success');
+    }
+}
+
+// Make quick login available globally
+window.quickLogin = quickLogin;
+
 // Global functions for onclick handlers
 function handleLogout() {
     console.log('handleLogout called');
