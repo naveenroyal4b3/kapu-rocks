@@ -54,6 +54,15 @@ const AuthManager = {
                     password: 'owner123',
                     role: 'owner',
                     createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    name: 'Naveen Kumar',
+                    email: 'naveenroyal4b3@gmail.com',
+                    mobile: '+91 98765 43212',
+                    password: 'naveen123',
+                    role: 'owner',
+                    createdAt: new Date().toISOString()
                 }
             ]);
         }
