@@ -898,34 +898,50 @@ const initForms = () => {
     });
 
     // Login Forms
-    document.getElementById('gmailLoginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('gmailEmail').value;
-        const password = document.getElementById('gmailPassword').value;
-        const result = AuthManager.login(email, password, 'gmail');
-        if (result.success) {
-            showNotification('Login successful!', 'success');
-            ModalManager.close('loginModal');
-            // Sync mobile if provided
-            const mobile = document.getElementById('gmailEmail').dataset.mobile;
-            if (mobile) AuthManager.syncAccounts(email, mobile);
-        } else {
-            showNotification(result.message || 'Login failed', 'error');
-        }
-    });
+    const gmailLoginForm = document.getElementById('gmailLoginForm');
+    if (gmailLoginForm) {
+        gmailLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Email login form submitted');
+            const email = document.getElementById('gmailEmail').value;
+            const password = document.getElementById('gmailPassword').value;
+            console.log('Attempting login with:', email);
+            const result = AuthManager.login(email, password, 'gmail');
+            console.log('Login result:', result);
+            if (result.success) {
+                showNotification('Login successful!', 'success');
+                ModalManager.close('loginModal');
+                // Sync mobile if provided
+                const mobile = document.getElementById('gmailEmail').dataset.mobile;
+                if (mobile) AuthManager.syncAccounts(email, mobile);
+            } else {
+                showNotification(result.message || 'Login failed', 'error');
+            }
+        });
+    } else {
+        console.error('gmailLoginForm not found!');
+    }
 
-    document.getElementById('mobileLoginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const mobile = document.getElementById('mobileNumber').value;
-        const otp = document.getElementById('mobileOTP').value;
-        const result = AuthManager.login(mobile, otp, 'mobile');
-        if (result.success) {
-            showNotification('Login successful!', 'success');
-            ModalManager.close('loginModal');
-        } else {
-            showNotification(result.message || 'Login failed', 'error');
-        }
-    });
+    const mobileLoginForm = document.getElementById('mobileLoginForm');
+    if (mobileLoginForm) {
+        mobileLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Mobile login form submitted');
+            const mobile = document.getElementById('mobileNumber').value;
+            const otp = document.getElementById('mobileOTP').value;
+            console.log('Attempting mobile login with:', mobile);
+            const result = AuthManager.login(mobile, otp, 'mobile');
+            console.log('Mobile login result:', result);
+            if (result.success) {
+                showNotification('Login successful!', 'success');
+                ModalManager.close('loginModal');
+            } else {
+                showNotification(result.message || 'Login failed', 'error');
+            }
+        });
+    } else {
+        console.error('mobileLoginForm not found!');
+    }
 
     // Register Forms
     document.getElementById('gmailRegisterForm').addEventListener('submit', (e) => {
