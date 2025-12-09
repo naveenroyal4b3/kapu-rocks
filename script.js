@@ -970,25 +970,33 @@ const initForms = () => {
                 return;
             }
             
-            // Close modal
-            ModalManager.close('loginModal');
-            
-            // Attempt login
+            // Attempt login FIRST
+            let result;
             try {
-                const result = AuthManager.login(email, password, 'gmail');
-                
-                if (result && result.success && result.user) {
-                    showNotification('Welcome ' + result.user.name + '!', 'success');
-                    // Clear form
-                    emailInput.value = '';
-                    passwordInput.value = '';
-                } else {
-                    const errorMsg = (result && result.message) ? result.message : 'Invalid email or password';
-                    showNotification(errorMsg, 'error');
-                }
+                result = AuthManager.login(email, password, 'gmail');
             } catch (error) {
                 console.error('Login form error:', error);
                 showNotification('Login error. Please try again.', 'error');
+                return;
+            }
+            
+            // Then close modal
+            ModalManager.close('loginModal');
+            
+            // Show notification based on result
+            if (result && result.success && result.user) {
+                // Clear form
+                emailInput.value = '';
+                passwordInput.value = '';
+                // Small delay to ensure modal is closed before showing notification
+                setTimeout(() => {
+                    showNotification('Welcome ' + result.user.name + '!', 'success');
+                }, 100);
+            } else {
+                const errorMsg = (result && result.message) ? result.message : 'Invalid email or password';
+                setTimeout(() => {
+                    showNotification(errorMsg, 'error');
+                }, 100);
             }
         });
     }
